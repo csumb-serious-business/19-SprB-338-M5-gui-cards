@@ -19,7 +19,8 @@ public class Assig5_p1_ex {
       
       for(int i=0;i<SUIT;i++) {//for all suits
          for(int j=0;j<=VALUE;j++) {//for all values
-            value=turnIntIntoCardValue(j);
+            value=   // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
+            turnIntIntoCardValue(j);
             suit=turnIntIntoCardSuit(i);
             //instantiate 57 icons in icon[] array
             icon[index]=new ImageIcon("images/"+value+suit+".gif");
@@ -39,8 +40,8 @@ public class Assig5_p1_ex {
        * @return cardValue if k is valid or `false` in case of error message
        */
       String cardValue;
-      String[] imageCardValue= {"A","2","3","4","5","6","7","8","9","10"
-            ,"J","Q","K","X"};
+      String[] imageCardValue= {"A","2","3","4","5","6","7","8","9","T"
+              ,"J","Q","K","X"};
       if(k>=0 && k<=VALUE) {//assign imageCardValue[k] to cardValue
          cardValue=imageCardValue[k];
       }
