@@ -414,12 +414,17 @@ class Hand {
      * -OR- an invalid card if that position is invalid or unpopulated
      */
     Card inspectCard(int k) {
-        int myCardsLength = myCards.length;
-        if (k >= 0 && k <= numCards && k <= myCardsLength) {
-            return myCards[k];//return the card at k position
-        } else {
-            return new Card('X', Card.Suit.diamonds);//returns a card with errorFlag
-        }
+    	  Card cardReturn;
+          if (k > numCards || k < 0)
+          {
+             cardReturn = new Card('Y', Card.Suit.spades); 
+          }
+
+          else
+          {
+             cardReturn = new Card(myCards[k - 1].getValue(), myCards[k - 1].getSuit());
+          }
+          return cardReturn;
     }
 
     @Override
