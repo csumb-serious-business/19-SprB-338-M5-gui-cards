@@ -44,9 +44,10 @@ public class Assign5_pt3_ex {
 	}
 
 	private static boolean AddLabelsForPlayers() {
-
-		userLabels = buttonsList(highCardGame.getHand(1), true);
-		botLabels = labelsList(highCardGame.getHand(0), false);
+		try
+		{
+		userLabels = buttonsArray(highCardGame.getHand(1), true);
+		botLabels = labelsArray(highCardGame.getHand(0), false);
 
 		for (JButton var : userLabels) {
 			myCardTable.pnlHumanHand.add(var);
@@ -54,6 +55,9 @@ public class Assign5_pt3_ex {
 
 		for (JLabel var : botLabels) {
 			myCardTable.pnlComputerHand.add(var);
+		}
+		}catch(Exception ex){
+			return false;
 		}
 
 		return true;
@@ -80,7 +84,7 @@ public class Assign5_pt3_ex {
 	}
 
 	// Heavy Hitting is done by this function
-	private static void display(Card playerChoice, Card computerChoice) {
+	private static void displayGame(Card playerChoice, Card computerChoice) {
 		int indexOf = 0;
 		String playerPrompt = "Click on a card below to choose";
 		String computerPrompt = "Computer says 'Please choose the higest value' to beat me ";
@@ -92,7 +96,7 @@ public class Assign5_pt3_ex {
 			if (playerChoice != null && computerChoice != null) {
 				playHand.takeCard(computerChoice);
 				playHand.takeCard(playerChoice);
-				playedCardLabels = labelsList(playHand, true);
+				playedCardLabels = labelsArray(playHand, true);
 
 				if (compare(playerChoice, computerChoice) == 1)
 					playerWinCount++;
@@ -109,11 +113,12 @@ public class Assign5_pt3_ex {
 			}
 
 			AddLabelsForPlayers();
+			
 			if (playedCardLabels[0] != null || playedCardLabels[1] != null)
 			// At the start of this we dont need any
 			{
-			for (indexOf = 0; indexOf < NUM_PLAYERS; indexOf++)
-					myCardTable.pnlPlayArea.add(playedCardLabels[indexOf]);
+					myCardTable.pnlPlayArea.add(playedCardLabels[0]);
+					myCardTable.pnlPlayArea.add(playedCardLabels[1]);
 			}
 
 			myCardTable.pnlPlayArea.add(new JLabel(computerPrompt, 0));
@@ -148,12 +153,13 @@ public class Assign5_pt3_ex {
 		myCardTable.setVisible(true);
 		GUICard.loadCardIcons();
 
-		display(null, null); // Start off with nothing selected
+		displayGame(null, null); // Start off with nothing selected
 		myCardTable.setVisible(true);
 
 	}
 
-	static JLabel[] labelsList(Hand myHand, boolean displayCards) {
+	static JLabel[] labelsArray(Hand myHand, boolean displayCards) 
+	{
 		JLabel[] handLabels = new JLabel[myHand.getNumCards()];
 		Card handCard = myHand.inspectCard(1);
 		int i = 1;
@@ -170,8 +176,8 @@ public class Assign5_pt3_ex {
 		return handLabels;
 	}
 
-	static JButton[] buttonsList(Hand currentHand, boolean displayCards) {
-		JButton[] handButtons = new JButton[currentHand.getNumCards()];
+	static JButton[] buttonsArray(Hand currentHand, boolean displayCards) {
+		JButton[] tempArrayButtons = new JButton[currentHand.getNumCards()];
 
 		Card handCard = currentHand.inspectCard(1);
 		// Inspect to get the validity, hence the while loop will exit if
@@ -179,16 +185,17 @@ public class Assign5_pt3_ex {
 		int i = 1;
 
 		while (!handCard.getErrorFlag()) {
-			if (displayCards) {
-				handButtons[i - 1] = new JButton(GUICard.getIcon(handCard));
-				handButtons[i - 1].addActionListener(new HumanHandListener());
-				handButtons[i - 1].setActionCommand("" + (i - 1) + "");
+			if (displayCards) 
+			{
+				tempArrayButtons[i - 1] = new JButton(GUICard.getIcon(handCard));
+				tempArrayButtons[i - 1].addActionListener(new HumanHandListener()); //Add the listener
+				tempArrayButtons[i - 1].setActionCommand("" + (i - 1) + ""); //Make a command identify for later when handling events to get index
 			} else
-				handButtons[i - 1] = new JButton(GUICard.getBackCardIcon());
+				tempArrayButtons[i - 1] = new JButton(GUICard.getBackCardIcon());
 			handCard = currentHand.inspectCard(++i);
 		}
 
-		return handButtons;
+		return tempArrayButtons;
 	}
 
 	// We assign the listener to ever card we display out, so the human hand
@@ -212,7 +219,7 @@ public class Assign5_pt3_ex {
 																		// value
 
 			// If the bot has a card higher, should we do something?
-			display(humanCard, botCard);
+			displayGame(humanCard, botCard);
 			// Do a Refresh
 			refresh();
 		}
