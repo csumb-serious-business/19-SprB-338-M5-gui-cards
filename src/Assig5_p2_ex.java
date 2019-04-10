@@ -415,18 +415,23 @@ class Hand {
      */
     Card inspectCard(int k) {
     	  Card cardReturn;
-          if (k > numCards || k < 0)
+    	  //if(index is less than the accessable and greater than the index)
+    	  Card card1;
+          if (k <= numCards && k >= 0)
           {
-             cardReturn = new Card('Y', Card.Suit.spades); 
+        	  card1 = new Card(myCards[k - 1].getValue(), myCards[k - 1].getSuit());
           }
 
           else
           {
-             cardReturn = new Card(myCards[k - 1].getValue(), myCards[k - 1].getSuit());
+            
+             card1 = new Card('Z', Card.Suit.spades); //creates a card that will not work so error flag returns true
           }
-          return cardReturn;
+          return card1;
     }
 
+    
+    
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "{ ", " }");
