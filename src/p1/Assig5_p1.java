@@ -56,6 +56,9 @@ public class Assig5_p1 {
         frmMyWindow.setVisible(true);
     }
 
+    /**
+     * Represents a Playing Card Suit
+     */
     private enum Suit {
         C, // Clubs
         D, // Diamonds
@@ -68,6 +71,9 @@ public class Assig5_p1 {
         }
     }
 
+    /**
+     * Represents a Playing Card face value
+     */
     private enum FaceValue {
         A,  // Ace
         _2, // Numeric

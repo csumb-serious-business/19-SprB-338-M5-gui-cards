@@ -13,7 +13,11 @@ public class Assig5_p2 {
     static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS]; ////
     static JLabel[] playLabelText = new JLabel[NUM_PLAYERS]; ////
 
-    ///
+    /**
+     * Creates a randomly generated card
+     *
+     * @return the generated card
+     */
     static Card generateRandomCard() {
         int randCard = (int) (Math.random() * 56);
         return randDeck.inspectCard(randCard);
@@ -74,14 +78,17 @@ public class Assig5_p2 {
     }
 }
 
+/**
+ * Models a card table
+ */
 class CardTable extends JFrame {
-    static int MAX_CARDS_PER_HAND = 56; ///
-    static int MAX_PLAYERS = 2; ///
-    public JPanel pnlComputerHand; ///
-    public JPanel pnlHumanHand; ///
-    public JPanel pnlPlayArea; ///
-    private int numCardsPerHand; ///
-    private int numPlayers; ///
+    static int MAX_CARDS_PER_HAND = 56;
+    static int MAX_PLAYERS = 2;
+    public JPanel pnlComputerHand;
+    public JPanel pnlHumanHand;
+    public JPanel pnlPlayArea;
+    private int numCardsPerHand;
+    private int numPlayers;
 
     /**
      * Arranges panels for the card table
@@ -90,7 +97,6 @@ class CardTable extends JFrame {
      * @param numCardsPerHand the max number of per player hand
      * @param numPlayers      the number of players for this game
      */
-    ///
     public CardTable(String title, int numCardsPerHand, int numPlayers) {
         super();
 
@@ -123,25 +129,34 @@ class CardTable extends JFrame {
         add(pnlHumanHand, BorderLayout.SOUTH);
     }
 
-    ///
+    /**
+     * @return gets the number of players in this game
+     */
     public int getNumPlayers() {
         return numPlayers;
     }
 
-    ///
+    /**
+     * @return gets the maximum number of cards in each hand
+     */
     public int getNumCardsPerHand() {
         return numCardsPerHand;
     }
 
 }
 
+/**
+ * Models an individual card within the UI
+ */
 class GUICard {
     static final String imagesDir = "images/";
-    static boolean iconsLoaded = false; ///
-    private static Icon[][] iconCards = new ImageIcon[14][4]; /// 14 = A through K plus joker
-    private static Icon iconBack; ///
+    static boolean iconsLoaded = false;
+    private static Icon[][] iconCards = new ImageIcon[14][4]; // 14 = A through K plus joker
+    private static Icon iconBack;
 
-    ///
+    /**
+     * Populates the static iconCards array
+     */
     static void loadCardIcons() {
         if (iconsLoaded) {
             return;
@@ -160,13 +175,22 @@ class GUICard {
     }
 
 
-    ///
+    /**
+     * retrieves a given card's icon
+     *
+     * @param card the card to retrieve
+     * @return the corresponding UI icon for that card
+     */
     static public Icon getIcon(Card card) {
         loadCardIcons();
         return iconCards[Card.valueAsInt(card)][Card.suitAsInt(card)];
     }
 
-    ///
+    /**
+     * retrieves the icon for the backside of cards
+     *
+     * @return the backside UI icon
+     */
     static public Icon getBackCardIcon() {
         loadCardIcons();
         return iconBack;
@@ -179,7 +203,7 @@ class GUICard {
  * Represents a single playing card with a suit and value
  */
 class Card {
-    /// superseded by FaceValue enum
+    // superseded by FaceValue enum
     public static char[] valuRanks = {
             'A',
             '2', '3', '4', '5', '6', '7', '8', '9',
@@ -229,6 +253,13 @@ class Card {
         return suit != null;
     }
 
+    /**
+     * Checks a given face value and suit for validity
+     *
+     * @param value the value to check
+     * @param suit  the suit to check
+     * @return true if valid
+     */
     private static boolean isValid(FaceValue value, Suit suit) {
         return value != null && suit != null;
     }
@@ -245,7 +276,12 @@ class Card {
         return card.value.ordinal();
     }
 
-    ///
+    /**
+     * Sorts a given array of cards, first by values then by suit
+     *
+     * @param cards     the array to sort
+     * @param arraySize the size of the array to sort
+     */
     static void arraySort(Card[] cards, int arraySize) {
         for (int i = 0; i < arraySize - 1; i++) {
             for (int j = 0; j < arraySize - i - 1; j++) {
@@ -380,6 +416,9 @@ class Card {
         }
     }
 
+    /**
+     * Represents a Playing Card face value
+     */
     enum FaceValue {
         A,  // Ace
         _2, // Numeric
@@ -397,17 +436,17 @@ class Card {
         X; // Joker
 
         /**
-         * todo Overload
+         * Converts a character to its corresponding FaceValue
          *
-         * @param c
-         * @return
-         * @throws IllegalArgumentException
+         * @param character the character to convert into a FaceValue
+         * @return the corresponding FaceValue for this character
+         * @throws IllegalArgumentException when character has no corresponding FaceValue
          */
-        public static FaceValue valueOf(char c) throws IllegalArgumentException {
-            if (Character.isDigit(c)) {
-                return FaceValue.valueOf("_" + c);
+        public static FaceValue valueOf(char character) throws IllegalArgumentException {
+            if (Character.isDigit(character)) {
+                return FaceValue.valueOf("_" + character);
             }
-            return FaceValue.valueOf("" + c);
+            return FaceValue.valueOf("" + character);
         }
 
         @Override
@@ -442,7 +481,6 @@ class Hand {
      * @return true if card successfully taken
      */
     public boolean takeCard(Card card) {
-        //todo must use char?
         if (numCards < MAX_CARDS) {
             Card takenCard = new Card(card.getValue(), card.getSuit());
             myCards[numCards++] = takenCard; //copies card to myCards
@@ -499,6 +537,12 @@ class Hand {
 
     }
 
+    /**
+     * Plays a given card from this Hand
+     *
+     * @param cardIndex the index of the card in this hand to play
+     * @return the Card that was played or an invalid card upon failure
+     */
     public Card playCard(int cardIndex) {
         if (numCards == 0) //error
         {
@@ -518,7 +562,9 @@ class Hand {
         return card;
     }
 
-    ///
+    /**
+     * Sorts this hands cards by value and suit
+     */
     void sort() {
         Card.arraySort(myCards, numCards);
     }
@@ -679,19 +725,31 @@ class Deck {
         }
     }
 
-    ///
+    /**
+     * @return the number of cards in this deck
+     */
     int getNumCards() {
         return cards.length;
     }
 
-    ///
+    /**
+     * Adds a given card to this deck
+     *
+     * @param card the card to add
+     * @return true if successful
+     */
     boolean addCard(Card card) {
         cards[topCard + 1] = card;
         topCard++;
         return cards[topCard] == card;
     }
 
-    ///
+    /**
+     * Removes a given card from this deck
+     *
+     * @param card the card to remove
+     * @return true if successful
+     */
     boolean removeCard(Card card) {
         boolean success = false;
         for (Card c : cards) {
@@ -705,7 +763,9 @@ class Deck {
         return success;
     }
 
-    ///
+    /**
+     * Sorts the cards in this deck by face value and suit
+     */
     void sort() {
         Card.arraySort(cards, topCard);
     }
