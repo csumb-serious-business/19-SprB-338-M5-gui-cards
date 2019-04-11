@@ -20,43 +20,31 @@ public class Assig5_pt3 {
     static private int computerWinCount = 0;
     static private int tieCount = 0;
 
-    private static Boolean RemoveAll() {
-        try {
-            myCardTable.pnlComputerHand.removeAll();
-            myCardTable.pnlHumanHand.removeAll();
-            myCardTable.pnlPlayArea.removeAll();
-        } catch (Exception s) {
-            return false;
-        }
+    private static Boolean removeAll() {
+        myCardTable.pnlComputerHand.removeAll();
+        myCardTable.pnlHumanHand.removeAll();
+        myCardTable.pnlPlayArea.removeAll();
         return true;
     }
 
-    private static Boolean ValidateAll() {
-        try {
-            myCardTable.pnlPlayArea.validate();
-            myCardTable.pnlComputerHand.validate();
-            myCardTable.pnlHumanHand.validate();
-            myCardTable.validate();
-        } catch (Exception exp) {
-            return false;
-        }
+    private static Boolean validateAll() {
+        myCardTable.pnlPlayArea.validate();
+        myCardTable.pnlComputerHand.validate();
+        myCardTable.pnlHumanHand.validate();
+        myCardTable.validate();
         return true;
     }
 
-    private static boolean AddLabelsForPlayers() {
-        try {
-            userLabels = buttonsArray(highCardGame.getHand(1), true);
-            botLabels = labelsArray(highCardGame.getHand(0), false);
+    private static boolean addLabelsForPlayers() {
+        userLabels = populateButtons(highCardGame.getHand(1));
+        botLabels = populateLabels(highCardGame.getHand(0), false);
 
-            for (JButton var : userLabels) {
-                myCardTable.pnlHumanHand.add(var);
-            }
+        for (JButton button : userLabels) {
+            myCardTable.pnlHumanHand.add(button);
+        }
 
-            for (JLabel var : botLabels) {
-                myCardTable.pnlComputerHand.add(var);
-            }
-        } catch (Exception ex) {
-            return false;
+        for (JLabel label : botLabels) {
+            myCardTable.pnlComputerHand.add(label);
         }
 
         return true;
@@ -69,50 +57,49 @@ public class Assig5_pt3 {
 
     // Heavy Hitting is done by this function
     private static void displayGame(Card playerChoice, Card computerChoice) {
-        int indexOf = 0;
         String playerPrompt = "Click on a card below to choose";
-        String computerPrompt = "Computer says 'Please choose the higest value' to beat me ";
+        String computerPrompt = "Computer says 'Please choose the highest value' to win";
         String tieCountPrompt = "";
 
-        if (RemoveAll()) // Can We Clear the Label
-        {
-            Hand playHand = new Hand();
-            if (playerChoice != null && computerChoice != null) {
-                playHand.takeCard(computerChoice);
-                playHand.takeCard(playerChoice);
-                playedCardLabels = labelsArray(playHand, true);
+        // clear everything
+        removeAll();
 
-                if (compare(playerChoice, computerChoice) == 1) {
-                    playerWinCount++;
-                } else if (compare(playerChoice, computerChoice) == 0) {
-                    computerWinCount++;
-                } else if (compare(playerChoice, computerChoice) == -1) {
-                    tieCount++;
-                }
+        Hand playHand = new Hand();
+        if (playerChoice != null && computerChoice != null) {
+            playHand.takeCard(computerChoice);
+            playHand.takeCard(playerChoice);
+            playedCardLabels = populateLabels(playHand, true);
 
-
-                playerPrompt = "[Status]User Wins: " + playerWinCount;
-                computerPrompt = "[Status]Computer Wins: " + computerWinCount;
-                tieCountPrompt = " [Ties]: " + tieCount;
+            if (compare(playerChoice, computerChoice) == 1) {
+                playerWinCount++;
+            } else if (compare(playerChoice, computerChoice) == 0) {
+                computerWinCount++;
+            } else if (compare(playerChoice, computerChoice) == -1) {
+                tieCount++;
             }
 
 
-            AddLabelsForPlayers();
-
-            if (playedCardLabels[0] != null || playedCardLabels[1] != null)
-            // At the start of this we dont need any
-            {
-                myCardTable.pnlPlayArea.add(playedCardLabels[0]);
-                myCardTable.pnlPlayArea.add(playedCardLabels[1]);
-            }
-
-            myCardTable.pnlPlayArea.add(new JLabel(computerPrompt, 0));
-            myCardTable.pnlPlayArea.add(new JLabel(playerPrompt + "\n" + tieCountPrompt, 0));
-
-
-            ValidateAll();
-            // If something goes wrong we know because this will return flase
+            playerPrompt = "[Status]User Wins: " + playerWinCount;
+            computerPrompt = "[Status]Computer Wins: " + computerWinCount;
+            tieCountPrompt = " [Ties]: " + tieCount;
         }
+
+
+        addLabelsForPlayers();
+
+        // At the start of this we dont need any
+        if (playedCardLabels[0] != null || playedCardLabels[1] != null) {
+            myCardTable.pnlPlayArea.add(playedCardLabels[0]);
+            myCardTable.pnlPlayArea.add(playedCardLabels[1]);
+        }
+
+        myCardTable.pnlPlayArea.add(new JLabel(computerPrompt, 0));
+        myCardTable.pnlPlayArea.add(new JLabel(playerPrompt + "\n" + tieCountPrompt, 0));
+
+
+        validateAll();
+        // If something goes wrong we know because this will return flase
+
     }
 
     // Human Plays first each turn
@@ -131,7 +118,7 @@ public class Assig5_pt3 {
         highCardGame.sortHands();
 
         // establish main frame in which program will run
-        myCardTable = new CardTable("HIGH Table - Phase 3", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+        myCardTable = new CardTable("High-Card Table - Phase 3", NUM_CARDS_PER_HAND, NUM_PLAYERS);
         myCardTable.setSize(800, 600);
         myCardTable.setLocationRelativeTo(null);
         myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -144,42 +131,34 @@ public class Assig5_pt3 {
 
     }
 
-    static JLabel[] labelsArray(Hand myHand, boolean displayCards) {
-        JLabel[] handLabels = new JLabel[myHand.getNumCards()];
-        Card handCard = myHand.inspectCard(1);
-        int i = 1;
-        // Inspect to get the validity, hence the while loop will exit if
-        // recieved flag
-        while (!handCard.getErrorFlag()) {
-            if (displayCards) {
-                handLabels[i - 1] = new JLabel(GUICard.getIcon(handCard));
-            } else
-                handLabels[i - 1] = new JLabel(GUICard.getBackCardIcon());
-            handCard = myHand.inspectCard(++i);
-        }
+    static JLabel[] populateLabels(Hand hand, boolean isFaceUp) {
+        JLabel[] handLabels = new JLabel[hand.getNumCards()];
 
+
+        for (int i = 0; i < hand.getNumCards(); i++) {
+            JLabel label;
+            if (isFaceUp) {
+                label = new JLabel(GUICard.getIcon(hand.inspectCard(i)));
+            } else {
+                label = new JLabel(GUICard.getBackCardIcon());
+            }
+            handLabels[i] = label;
+        }
         return handLabels;
     }
 
-    static JButton[] buttonsArray(Hand currentHand, boolean displayCards) {
-        JButton[] tempArrayButtons = new JButton[currentHand.getNumCards()];
+    static JButton[] populateButtons(Hand hand) {
+        JButton[] buttons = new JButton[hand.getNumCards()];
 
-        Card handCard = currentHand.inspectCard(1);
-        // Inspect to get the validity, hence the while loop will exit if
-        // recieved flag
-        int i = 1;
-
-        while (!handCard.getErrorFlag()) {
-            if (displayCards) {
-                tempArrayButtons[i - 1] = new JButton(GUICard.getIcon(handCard));
-                tempArrayButtons[i - 1].addActionListener(new HumanHandListener()); //Add the listener
-                tempArrayButtons[i - 1].setActionCommand("" + (i - 1) + ""); //Make a command identify for later when handling events to get index
-            } else
-                tempArrayButtons[i - 1] = new JButton(GUICard.getBackCardIcon());
-            handCard = currentHand.inspectCard(++i);
+        for (int i = 0; i < hand.getNumCards(); i++) {
+            Card card = hand.inspectCard(i);
+            JButton button = new JButton(GUICard.getIcon(card));
+            button.addActionListener(new HumanHandListener());
+            button.setActionCommand(String.valueOf(i));
+            buttons[i] = button;
         }
 
-        return tempArrayButtons;
+        return buttons;
     }
 
     // We assign the listener to ever card we display out, so the human hand
@@ -196,20 +175,9 @@ public class Assig5_pt3 {
             // If the bot has a card higher, should we do something?
             displayGame(humanCard, botCard);
             // Do a Refresh
-            refresh();
-        }
-
-        private Boolean refresh() {
-            try {
-                myCardTable.repaint();
-
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
+            myCardTable.repaint();
         }
     }
-
 }
 
 
@@ -827,7 +795,6 @@ class Hand {
         return card;
     }
 
-    ///
     void sort() {
         Card.arraySort(myCards, numCards);
     }
