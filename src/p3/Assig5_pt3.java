@@ -385,13 +385,13 @@ class CardGameFramework {
  * Models a card table
  */
 class CardTable extends JFrame {
-    static int MAX_CARDS_PER_HAND = 56; ///
-    static int MAX_PLAYERS = 2; ///
-    public JPanel pnlComputerHand; ///
-    public JPanel pnlHumanHand; ///
-    public JPanel pnlPlayArea; ///
-    private int numCardsPerHand; ///
-    private int numPlayers; ///
+    static int MAX_CARDS_PER_HAND = 56;
+    static int MAX_PLAYERS = 2;
+    public JPanel pnlComputerHand;
+    public JPanel pnlHumanHand;
+    public JPanel pnlPlayArea;
+    private int numCardsPerHand;
+    private int numPlayers;
 
     /**
      * Arranges panels for the card table
@@ -400,7 +400,6 @@ class CardTable extends JFrame {
      * @param numCardsPerHand the max number of per player hand
      * @param numPlayers      the number of players for this game
      */
-    ///
     public CardTable(String title, int numCardsPerHand, int numPlayers) {
         super();
 
@@ -454,9 +453,9 @@ class CardTable extends JFrame {
  */
 class GUICard {
     static final String imagesDir = "images/";
-    static boolean iconsLoaded = false; ///
-    private static Icon[][] iconCards = new ImageIcon[14][4]; /// 14 = A through K plus joker
-    private static Icon iconBack; ///
+    static boolean iconsLoaded = false;
+    private static Icon[][] iconCards = new ImageIcon[14][4]; // 14 = A through K plus joker
+    private static Icon iconBack;
 
     /**
      * Populates the static iconCards array
@@ -508,7 +507,7 @@ class GUICard {
  * Represents a single playing card with a suit and value
  */
 class Card implements Comparable<Card> {
-    /// superseded by FaceValue enum
+    // superseded by FaceValue enum
     public static char[] valuRanks = {
             'A',
             '2', '3', '4', '5', '6', '7', '8', '9',
@@ -819,8 +818,6 @@ class Hand {
         numCards = 0;
         myCards = new Card[MAX_CARDS];
     }
-
-    //   numCards accessor
 
     /**
      * @return the number of cards currently in this hand
