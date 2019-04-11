@@ -70,12 +70,13 @@ public class Assig5_pt3 {
             playHand.takeCard(playerChoice);
             playedCardLabels = populateLabels(playHand, true);
 
-            if (compare(playerChoice, computerChoice) == 1) {
+
+            if (compare(playerChoice, computerChoice) >= 1) {
                 playerWinCount++;
             } else if (compare(playerChoice, computerChoice) == 0) {
-                computerWinCount++;
-            } else if (compare(playerChoice, computerChoice) == -1) {
                 tieCount++;
+            } else if (compare(playerChoice, computerChoice) <= -1) {
+                computerWinCount++;
             }
 
 

@@ -20,8 +20,6 @@ public class Assig5_p2 {
     }
 
     public static void main(String[] args) {
-        int k;
-        Icon tempIcon;
 
         // establish main frame in which program will run
         CardTable myCardTable = new CardTable("CardTable",
