@@ -20,14 +20,24 @@ public class Assig5_pt3 {
     static private int computerWinCount = 0;
     static private int tieCount = 0;
 
-    private static Boolean removeAll() {
+    /**
+     * Clears the panels in the CardTable
+     *
+     * @return true if successful
+     */
+    private static boolean removeAll() {
         myCardTable.pnlComputerHand.removeAll();
         myCardTable.pnlHumanHand.removeAll();
         myCardTable.pnlPlayArea.removeAll();
         return true;
     }
 
-    private static Boolean validateAll() {
+    /**
+     * Validate the panels in the CardTable
+     *
+     * @return true if successful
+     */
+    private static boolean validateAll() {
         myCardTable.pnlPlayArea.validate();
         myCardTable.pnlComputerHand.validate();
         myCardTable.pnlHumanHand.validate();
@@ -35,6 +45,11 @@ public class Assig5_pt3 {
         return true;
     }
 
+    /**
+     * Adds labels for CardTable's players
+     *
+     * @return true if successful
+     */
     private static boolean addLabelsForPlayers() {
         userLabels = populateButtons(highCardGame.getHand(1));
         botLabels = populateLabels(highCardGame.getHand(0), false);
@@ -51,11 +66,23 @@ public class Assig5_pt3 {
 
     }
 
+    /**
+     * Compates the player's card against the computers card
+     *
+     * @param playerCard the player's card to evaluate
+     * @param botCard    the computer's card to evaluate
+     * @return the comparison result
+     */
     public static int compare(Card playerCard, Card botCard) {
         return playerCard.compareTo(botCard);
     }
 
-    // Heavy Hitting is done by this function
+    /**
+     * The main loop for this Card Game
+     *
+     * @param playerChoice   the player's chosen card
+     * @param computerChoice the computer's chosen card
+     */
     private static void displayGame(Card playerChoice, Card computerChoice) {
         String playerPrompt = "Click on a card below to choose";
         String computerPrompt = "Computer says 'Please choose the highest value' to win";
@@ -88,7 +115,7 @@ public class Assig5_pt3 {
 
         addLabelsForPlayers();
 
-        // At the start of this we dont need any
+        // At the start of this we don't need any
         if (playedCardLabels[0] != null || playedCardLabels[1] != null) {
             myCardTable.pnlPlayArea.add(playedCardLabels[0]);
             myCardTable.pnlPlayArea.add(playedCardLabels[1]);
@@ -99,11 +126,10 @@ public class Assig5_pt3 {
 
 
         validateAll();
-        // If something goes wrong we know because this will return flase
+        // If something goes wrong we know because this will return false
 
     }
 
-    // Human Plays first each turn
     public static void main(String[] args) {
         int numPacksPerDeck = 1;
         int numJokersPerPack = 0;
@@ -132,6 +158,13 @@ public class Assig5_pt3 {
 
     }
 
+    /**
+     * populates UI labels for a given hand
+     *
+     * @param hand     the hand to display
+     * @param isFaceUp whether the cards are face up or face down in the UI
+     * @return an array of labels to place into a UI container
+     */
     static JLabel[] populateLabels(Hand hand, boolean isFaceUp) {
         JLabel[] handLabels = new JLabel[hand.getNumCards()];
 
@@ -148,6 +181,12 @@ public class Assig5_pt3 {
         return handLabels;
     }
 
+    /**
+     * populates UI buttons for a given hand
+     *
+     * @param hand the hand to display
+     * @return an array of buttons to place into a UI container.
+     */
     static JButton[] populateButtons(Hand hand) {
         JButton[] buttons = new JButton[hand.getNumCards()];
 
@@ -162,10 +201,13 @@ public class Assig5_pt3 {
         return buttons;
     }
 
-    // We assign the listener to ever card we display out, so the human hand
+    /**
+     * An event listener for cards played from a player's hand
+     */
     private static class HumanHandListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent cardClicked) {
-            int humanIndex = Integer.valueOf(cardClicked.getActionCommand());
+            int humanIndex = Integer.parseInt(cardClicked.getActionCommand());
 
             // cards are ordered by value
             Card humanCard = highCardGame.getHand(1).playCard(humanIndex);
@@ -181,7 +223,9 @@ public class Assig5_pt3 {
     }
 }
 
-
+/**
+ * Provided, minor modification to support FaceValue enum instead of array
+ */
 class CardGameFramework {
     private static final int MAX_PLAYERS = 50;
 
@@ -337,6 +381,9 @@ class CardGameFramework {
 
 }
 
+/**
+ * Models a card table
+ */
 class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56; ///
     static int MAX_PLAYERS = 2; ///
@@ -386,25 +433,34 @@ class CardTable extends JFrame {
         add(pnlHumanHand, BorderLayout.SOUTH);
     }
 
-    ///
+    /**
+     * @return gets the number of players in this game
+     */
     public int getNumPlayers() {
         return numPlayers;
     }
 
-    ///
+    /**
+     * @return gets the maximum number of cards in each hand
+     */
     public int getNumCardsPerHand() {
         return numCardsPerHand;
     }
 
 }
 
+/**
+ * Models an individual card within the UI
+ */
 class GUICard {
     static final String imagesDir = "images/";
     static boolean iconsLoaded = false; ///
     private static Icon[][] iconCards = new ImageIcon[14][4]; /// 14 = A through K plus joker
     private static Icon iconBack; ///
 
-    ///
+    /**
+     * Populates the static iconCards array
+     */
     static void loadCardIcons() {
         if (iconsLoaded) {
             return;
@@ -423,13 +479,22 @@ class GUICard {
     }
 
 
-    ///
+    /**
+     * retrieves a given card's icon
+     *
+     * @param card the card to retrieve
+     * @return the corresponding UI icon for that card
+     */
     static public Icon getIcon(Card card) {
         loadCardIcons();
         return iconCards[Card.valueAsInt(card)][Card.suitAsInt(card)];
     }
 
-    ///
+    /**
+     * retrieves the icon for the backside of cards
+     *
+     * @return the backside UI icon
+     */
     static public Icon getBackCardIcon() {
         loadCardIcons();
         return iconBack;
@@ -493,6 +558,13 @@ class Card implements Comparable<Card> {
         return suit != null;
     }
 
+    /**
+     * Checks a given face value and suit for validity
+     *
+     * @param value the value to check
+     * @param suit  the suit to check
+     * @return true if valid
+     */
     private static boolean isValid(FaceValue value, Suit suit) {
         return value != null && suit != null;
     }
@@ -509,7 +581,12 @@ class Card implements Comparable<Card> {
         return card.value.ordinal();
     }
 
-    ///
+    /**
+     * Sorts a given array of cards, first by values then by suit
+     *
+     * @param cards     the array to sort
+     * @param arraySize the size of the array to sort
+     */
     static void arraySort(Card[] cards, int arraySize) {
         for (int i = 0; i < arraySize - 1; i++) {
             for (int j = 0; j < arraySize - i - 1; j++) {
@@ -628,6 +705,9 @@ class Card implements Comparable<Card> {
         return valueCompared;
     }
 
+    /**
+     * Represents a Playing Card Suit
+     */
     enum Suit {
         clubs, diamonds, hearts, spades;
 
@@ -655,6 +735,9 @@ class Card implements Comparable<Card> {
         }
     }
 
+    /**
+     * Represents a Playing Card face value
+     */
     enum FaceValue {
         A,  // Ace
         _2, // Numeric
@@ -672,17 +755,17 @@ class Card implements Comparable<Card> {
         X; // Joker
 
         /**
-         * todo Overload
+         * Converts a character to its corresponding FaceValue
          *
-         * @param c
-         * @return
-         * @throws IllegalArgumentException
+         * @param character the character to convert into a FaceValue
+         * @return the corresponding FaceValue for this character
+         * @throws IllegalArgumentException when character has no corresponding FaceValue
          */
-        public static FaceValue valueOf(char c) throws IllegalArgumentException {
-            if (Character.isDigit(c)) {
-                return FaceValue.valueOf("_" + c);
+        public static FaceValue valueOf(char character) throws IllegalArgumentException {
+            if (Character.isDigit(character)) {
+                return FaceValue.valueOf("_" + character);
             }
-            return FaceValue.valueOf("" + c);
+            return FaceValue.valueOf("" + character);
         }
 
         @Override
@@ -720,7 +803,6 @@ class Hand {
      * @return true if card successfully taken
      */
     public boolean takeCard(Card card) {
-        //todo must use char?
         if (numCards < MAX_CARDS) {
             Card takenCard = new Card(card.getValue(), card.getSuit());
             myCards[numCards++] = takenCard; //copies card to myCards
@@ -777,6 +859,12 @@ class Hand {
 
     }
 
+    /**
+     * Plays a given card from this Hand
+     *
+     * @param cardIndex the index of the card in this hand to play
+     * @return the Card that was played or an invalid card upon failure
+     */
     public Card playCard(int cardIndex) {
         if (numCards == 0) //error
         {
@@ -796,6 +884,9 @@ class Hand {
         return card;
     }
 
+    /**
+     * Sorts this hands cards by value and suit
+     */
     void sort() {
         Card.arraySort(myCards, numCards);
     }
@@ -916,7 +1007,6 @@ class Deck {
      * Fetches the card at a given position within the deck
      * -OR- an invalid card if that position is not populated
      * or the position is otherwise invalid
-     * <p>
      * does not remove the card from the deck
      *
      * @param k the position of the card in the deck to inspect
@@ -957,19 +1047,31 @@ class Deck {
         }
     }
 
-    ///
+    /**
+     * @return the number of cards in this deck
+     */
     int getNumCards() {
         return cards.length;
     }
 
-    ///
+    /**
+     * Adds a given card to this deck
+     *
+     * @param card the card to add
+     * @return true if successful
+     */
     boolean addCard(Card card) {
         cards[topCard + 1] = card;
         topCard++;
         return cards[topCard] == card;
     }
 
-    ///
+    /**
+     * Removes a given card from this deck
+     *
+     * @param card the card to remove
+     * @return true if successful
+     */
     boolean removeCard(Card card) {
         boolean success = false;
         for (Card c : cards) {
@@ -983,7 +1085,9 @@ class Deck {
         return success;
     }
 
-    ///
+    /**
+     * Sorts the cards in this deck by face value and suit
+     */
     void sort() {
         Card.arraySort(cards, topCard);
     }
